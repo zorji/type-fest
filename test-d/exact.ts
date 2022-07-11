@@ -31,6 +31,12 @@ import type {Exact} from '../index';
 		fn(input);
 	}
 
+	{ // It should reject readonly array
+		const input = [{code: ''}] as ReadonlyArray<{code: string}>;
+		// @ts-expect-error
+		fn(input);
+	}
+
 	{ // It should accept array with optional property
 		const input = [{code: '', name: ''}];
 		fn(input);
@@ -55,6 +61,11 @@ import type {Exact} from '../index';
 
 	{ // It should accept array with required property only
 		const input = [{code: ''}];
+		fn(input);
+	}
+
+	{ // It should accept readonly array
+		const input = [{code: ''}] as ReadonlyArray<{code: string}>;
 		fn(input);
 	}
 

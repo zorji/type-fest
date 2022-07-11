@@ -63,6 +63,8 @@ onlyAcceptNameImproved(invalidInput); // Compilation error
 */
 export type Exact<ParameterType, InputType> =
 	// Converting union of array to array of union. i.e. A[] & B[] => (A & B)[]
-	ParameterType extends ReadonlyArray<unknown> ? ReadonlyArray<Exact<ArrayElement<ParameterType>, ArrayElement<InputType>>>
+	ParameterType extends unknown[] ? Array<Exact<ArrayElement<ParameterType>, ArrayElement<InputType>>>
+	// Converting union of array to array of union. i.e. A[] & B[] => (A & B)[]
+	: ParameterType extends ReadonlyArray<unknown> ? ReadonlyArray<Exact<ArrayElement<ParameterType>, ArrayElement<InputType>>>
 	: ParameterType extends object ? ExactObject<ParameterType, InputType>
 	: ParameterType;
