@@ -49,6 +49,33 @@ import type {Exact} from '../index';
 	}
 }
 
+{ // Spec - readonly array
+	type Type = ReadonlyArray<{code: string; name?: string}>;
+	const fn = <T extends Exact<Type, T>>(args: T) => args;
+
+	{ // It should accept array with required property only
+		const input = [{code: ''}];
+		fn(input);
+	}
+
+	{ // It should accept array with optional property
+		const input = [{code: '', name: ''}];
+		fn(input);
+	}
+
+	{ // It should reject array with excess property
+		const input = [{code: '', name: '', excessProperty: ''}];
+		// @ts-expect-error
+		fn(input);
+	}
+
+	{ // It should reject invalid type
+		const input = '';
+		// @ts-expect-error
+		fn(input);
+	}
+}
+
 { // Spec - object
 	type Type = {code: string; name?: string};
 	const fn = <T extends Exact<Type, T>>(args: T) => args;
@@ -146,6 +173,54 @@ import type {Exact} from '../index';
 
 { // Spec - union of array
 	type Type = Array<{x: string}> & Array<{z: number}>;
+	const fn = <T extends Exact<Type, T>>(args: T) => args;
+
+	{ // It should accept valid input
+		const input = [{
+			x: '',
+			z: 1,
+		}];
+		fn(input);
+	}
+
+	{ // It should reject missing field
+		const input = [{
+			z: 1,
+		}];
+		// @ts-expect-error
+		fn(input);
+	}
+
+	{ // It should reject missing field
+		const input = [{
+			x: '',
+		}];
+		// @ts-expect-error
+		fn(input);
+	}
+
+	{ // It should reject incorrect type
+		const input = [{
+			x: 1,
+			z: 1,
+		}];
+		// @ts-expect-error
+		fn(input);
+	}
+
+	{ // It should reject excess field
+		const input = [{
+			x: '',
+			y: '',
+			z: 1,
+		}];
+		// @ts-expect-error
+		fn(input);
+	}
+}
+
+{ // Spec - union of readonly array + non readonly array
+	type Type = ReadonlyArray<{x: string}> & Array<{z: number}>;
 	const fn = <T extends Exact<Type, T>>(args: T) => args;
 
 	{ // It should accept valid input

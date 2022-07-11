@@ -5,7 +5,7 @@ Extract the element of an array that also works for array union.
 Return `never` if T is not an array.
 It creates a type-safe way to access the element type of `unknown` type.
 */
-type ArrayElement<T> = T extends unknown[] ? T[0] : never;
+type ArrayElement<T> = T extends ReadonlyArray<unknown> ? T[0] : never;
 
 /**
 Extract the object field type if T is an object and K is a key of T, return `never` otherwise.
@@ -63,6 +63,6 @@ onlyAcceptNameImproved(invalidInput); // Compilation error
 */
 export type Exact<ParameterType, InputType> =
 	// Converting union of array to array of union. i.e. A[] & B[] => (A & B)[]
-	ParameterType extends unknown[] ? Array<Exact<ArrayElement<ParameterType>, ArrayElement<InputType>>>
+	ParameterType extends ReadonlyArray<unknown> ? ReadonlyArray<Exact<ArrayElement<ParameterType>, ArrayElement<InputType>>>
 	: ParameterType extends object ? ExactObject<ParameterType, InputType>
 	: ParameterType;
